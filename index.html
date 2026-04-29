@@ -3,818 +3,480 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>El Guatazo de la Gata</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+<title>Restaurante</title>
+
 <style>
-  :root {
-    --rojo: #D9231A;
-    --rojo-oscuro: #A51510;
-    --rojo-claro: #FF4136;
-    --amarillo: #FFD600;
-    --amarillo-claro: #FFF176;
-    --negro: #1a1a1a;
-    --blanco: #FFFDF0;
-    --gris: #f5f0e8;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap');
 
-  * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--blanco);
-    color: var(--negro);
-    overflow-x: hidden;
-  }
-
-  /* ── BARRA FIJA SUPERIOR ── */
-  .topbar {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    background: var(--negro);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 2rem;
-    height: 60px;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.4);
-  }
-  .topbar-logo {
-    font-family: 'Bebas Neue', cursive;
-    color: var(--amarillo);
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-  }
-  .topbar-links {
-    display: flex;
-    gap: 1.2rem;
-    align-items: center;
-  }
-  .topbar-links a {
-    color: var(--blanco);
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: color .2s;
-  }
-  .topbar-links a:hover { color: var(--amarillo); }
-
-  .btn-whatsapp {
-    background: #25D366;
-    color: #fff !important;
-    padding: 8px 18px;
-    border-radius: 30px;
-    font-weight: 900 !important;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: background .2s, transform .2s !important;
-    box-shadow: 0 2px 8px rgba(37,211,102,0.35);
-  }
-  .btn-whatsapp:hover {
-    background: #1ebe5a !important;
-    color: #fff !important;
-    transform: scale(1.05);
-  }
-  .btn-whatsapp svg { width:18px; height:18px; }
-
-  /* ── HERO ── */
-  .hero {
-    margin-top: 60px;
-    background: var(--rojo);
-    min-height: 90vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    padding: 3rem 1rem;
-  }
-  .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255,214,0,0.07) 0px,
-      rgba(255,214,0,0.07) 2px,
-      transparent 2px,
-      transparent 24px
-    );
-  }
-  .hero-logo-wrap {
-    position: relative;
-    z-index: 2;
-    animation: float 3s ease-in-out infinite;
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-  }
-  .hero-logo {
-    font-size: 9rem;
-    line-height: 1;
-    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.35));
-  }
-  .hero h1 {
-    font-family: 'Bebas Neue', cursive;
-    font-size: clamp(3rem, 10vw, 6.5rem);
-    color: var(--amarillo);
-    letter-spacing: 4px;
-    line-height: 0.95;
-    position: relative;
-    z-index: 2;
-    text-shadow: 4px 4px 0 var(--rojo-oscuro);
-    margin: 0.5rem 0;
-  }
-  .hero-sub {
-    font-size: 1.2rem;
-    color: var(--amarillo-claro);
-    font-weight: 700;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    position: relative;
-    z-index: 2;
-    margin-bottom: 2rem;
-  }
-  .hero-cta {
-    position: relative;
-    z-index: 2;
-    background: var(--amarillo);
-    color: var(--negro);
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.4rem;
-    letter-spacing: 2px;
-    padding: 14px 40px;
-    border-radius: 50px;
-    text-decoration: none;
-    transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-  }
-  .hero-cta:hover { transform: scale(1.07); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-
-  /* Sticker decorativo */
-  .sticker {
-    position: absolute;
-    font-size: 5rem;
-    opacity: 0.12;
-    pointer-events: none;
-    user-select: none;
-  }
-  .sticker-1 { top: 10%; left: 5%; font-size: 8rem; }
-  .sticker-2 { bottom: 8%; right: 4%; font-size: 10rem; transform: rotate(20deg); }
-  .sticker-3 { top: 50%; left: 2%; font-size: 4rem; transform: rotate(-15deg); }
-
-  /* ── SECCIONES GENÉRICAS ── */
-  section { padding: 5rem 2rem; }
-  .section-title {
-    font-family: 'Bebas Neue', cursive;
-    font-size: clamp(2.2rem, 6vw, 3.5rem);
-    letter-spacing: 3px;
-    color: var(--rojo);
-    text-align: center;
-    margin-bottom: 2.5rem;
-    position: relative;
-  }
-  .section-title::after {
-    content: '';
-    display: block;
-    width: 80px;
-    height: 5px;
-    background: var(--amarillo);
-    border-radius: 3px;
-    margin: 10px auto 0;
-  }
-
-  /* ── MENÚ ── */
-  #menu { background: var(--gris); }
-  .menu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 2rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .menu-card {
-    background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.10);
-    transition: transform .3s, box-shadow .3s;
-    position: relative;
-  }
-  .menu-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 14px 36px rgba(0,0,0,0.18);
-  }
-  .menu-card-img {
-    width: 100%;
-    height: 190px;
-    object-fit: cover;
-    display: block;
-    background: #eee;
-    font-size: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .menu-card-body { padding: 1.2rem 1.4rem 1.5rem; }
-  .menu-card h3 {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.5rem;
-    letter-spacing: 1px;
-    color: var(--negro);
-    margin-bottom: 0.4rem;
-  }
-  .menu-card p {
-    font-size: 0.9rem;
-    color: #666;
-    line-height: 1.55;
-    margin-bottom: 0.8rem;
-  }
-  .menu-price {
-    display: inline-block;
-    background: var(--rojo);
-    color: var(--amarillo);
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.3rem;
-    letter-spacing: 1px;
-    padding: 4px 16px;
-    border-radius: 30px;
-  }
-  .menu-badge {
-    position: absolute;
-    top: 12px; right: 12px;
-    background: var(--amarillo);
-    color: var(--negro);
-    font-weight: 900;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    padding: 4px 10px;
-    border-radius: 20px;
-    text-transform: uppercase;
-  }
-
-  /* ── FOTOS ── */
-  #fotos { background: var(--negro); }
-  #fotos .section-title { color: var(--amarillo); }
-  #fotos .section-title::after { background: var(--rojo); }
-  .fotos-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .foto-item {
-    border-radius: 16px;
-    overflow: hidden;
-    aspect-ratio: 1;
-    background: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    transition: transform .3s;
-    cursor: pointer;
-    position: relative;
-  }
-  .foto-item:hover { transform: scale(1.04); }
-  .foto-item:nth-child(3n+1) { background: #3a1515; }
-  .foto-item:nth-child(3n+2) { background: #3a2e00; }
-  .foto-item:nth-child(3n+3) { background: #1a2a1a; }
-  .foto-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(217,35,26,0.0);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity .3s;
-    color: #fff;
-    font-weight: 900;
-    font-size: 0.85rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  .foto-item:hover .foto-overlay { opacity: 1; background: rgba(217,35,26,0.65); }
-  .foto-caption {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.7));
-    color: #fff;
-    font-size: 0.8rem;
-    font-weight: 700;
-    padding: 1rem 0.8rem 0.5rem;
-    text-align: center;
-  }
-
-  /* ── HORARIO ── */
-  #horario { background: var(--amarillo); }
-  #horario .section-title { color: var(--rojo-oscuro); }
-  #horario .section-title::after { background: var(--negro); }
-  .horario-table {
-    max-width: 560px;
-    margin: 0 auto;
-    background: #fff;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  }
-  .horario-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.8rem;
-    border-bottom: 1px solid #f0e8d0;
-    transition: background .2s;
-  }
-  .horario-row:last-child { border-bottom: none; }
-  .horario-row:hover { background: #fff8e1; }
-  .horario-row.cerrado { opacity: 0.45; }
-  .dia { font-weight: 700; font-size: 1rem; }
-  .hora {
-    font-weight: 900;
-    color: var(--rojo);
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.2rem;
-    letter-spacing: 1px;
-  }
-  .hora.cerrado { color: #aaa; }
-
-  /* ── REDES ── */
-  #redes { background: var(--rojo); }
-  #redes .section-title { color: var(--amarillo); }
-  #redes .section-title::after { background: #fff; }
-  .redes-btns {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .btn-red {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 36px;
-    border-radius: 50px;
-    font-family: 'Bebas Neue', cursive;
-    font-size: 1.4rem;
-    letter-spacing: 2px;
-    text-decoration: none;
-    transition: transform .2s, box-shadow .2s;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  }
-  .btn-red:hover { transform: scale(1.07); box-shadow: 0 12px 32px rgba(0,0,0,0.35); }
-  .btn-facebook { background: #1877F2; color: #fff; }
-  .btn-tiktok { background: #000; color: #fff; }
-  .btn-tiktok svg path { fill: #fff; }
-  .btn-red svg { width: 28px; height: 28px; }
-
-  /* ── UBICACIÓN Y MAPA ── */
-  #ubicacion { background: var(--gris); }
-  .ubicacion-inner {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 1.6fr;
-    gap: 2.5rem;
-    align-items: start;
-  }
-  .ubicacion-info h3 {
-    font-family: 'Bebas Neue', cursive;
-    font-size: 2rem;
-    color: var(--rojo);
-    letter-spacing: 2px;
-    margin-bottom: 1rem;
-  }
-  .ubicacion-info p {
-    font-size: 1rem;
-    line-height: 1.7;
-    color: #444;
-    margin-bottom: 0.5rem;
-  }
-  .ubicacion-info strong { color: var(--negro); }
-  .map-frame {
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-    border: 4px solid var(--rojo);
-  }
-  .map-frame iframe {
-    width: 100%;
-    height: 340px;
-    border: none;
-    display: block;
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    background: var(--negro);
-    color: #aaa;
-    text-align: center;
-    padding: 2rem 1rem;
-    font-size: 0.85rem;
-  }
-  footer span { color: var(--amarillo); font-weight: 900; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 700px) {
-    .topbar-links a:not(.btn-whatsapp) { display: none; }
-    .ubicacion-inner { grid-template-columns: 1fr; }
-    .hero-logo { font-size: 6rem; }
-  }
-
-#info-local {
-  background: #fff;
+html, body {
+  height: 100%;
+  overflow-x: hidden;
 }
 
-.info-grid {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.info-block {
-  background: var(--gris);
-  border-radius: 16px;
-  padding: 1.2rem 1.4rem;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-}
-
-.info-block h3 {
-  font-family: 'Bebas Neue', cursive;
-  font-size: 1.3rem;
-  color: var(--rojo);
-  margin-bottom: 0.6rem;
-  letter-spacing: 1px;
-}
-
-.info-block ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.info-block li {
-  font-size: 0.9rem;
-  color: #444;
-  margin-bottom: 4px;
-}
-.topbar-logo {
+/* ── Fondo oscuro base ── */
+.page {
+  min-height: 100vh;
+  background: #0a0400;
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.topbar-logo img {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  object-fit: cover;
-
-  border: 2px solid var(--amarillo); /* 🔥 borde */
-  padding: 2px;                      /* separación interna */
-  background: #fff;                  /* mejora contraste */
-}
-
-.topbar-logo span {
-  font-family: 'Bebas Neue', cursive;
-  color: var(--amarillo);
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-}
-
-.toplogo-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.toplogo-logo img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%; /* 🔥 corregido (150% no es necesario) */
-  object-fit: cover;
-
-  border: 4px solid var(--amarillo); /* 🔥 borde */
-  padding: 3px;                      /* espacio interno */
-  background: #fff;                  /* fondo para contraste */
-}
-
-.toplogo-logo span {
-  font-family: 'Bebas Neue', cursive;
-  color: var(--amarillo);
-  font-size: 1.5rem;
-  letter-spacing: 2px;
-}
-.footer-logo {
-  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  padding: 2.5rem 1.5rem 4rem;
+  font-family: 'Cormorant Garamond', serif;
+  position: relative;
+  overflow: hidden;
 }
 
-.footer-logo img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%; /* 🔥 circular */
+/* ── Canvas de llamas (detrás de todo) ── */
+#fireCanvas {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Resplandor ambiental de fuego ── */
+.ember-glow {
+  position: fixed;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  height: 55vh;
+  background: radial-gradient(ellipse at 50% 100%,
+    rgba(255, 80, 0, 0.55) 0%,
+    rgba(200, 40, 0, 0.30) 35%,
+    rgba(100, 10, 0, 0.15) 65%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+  animation: glowPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes glowPulse {
+  0%   { opacity: 0.7; transform: translateX(-50%) scaleX(1); }
+  100% { opacity: 1;   transform: translateX(-50%) scaleX(1.06); }
+}
+
+/* ── Contenido ── */
+.content {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.ornament {
+  color: #ffd700;
+  font-size: 12px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  opacity: 0.85;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 0 12px rgba(255, 160, 0, 0.8);
+}
+
+/* ── Logo con anillo de fuego ── */
+.logo-wrap {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 1rem 0 0.8rem;
+}
+
+.logo-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  background: conic-gradient(
+    #ff4500, #ff8c00, #ffd700, #ff8c00, #ff4500, #cc2200, #ff4500
+  ) border-box;
+  animation: spinRing 4s linear infinite;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+}
+
+@keyframes spinRing {
+  to { transform: rotate(360deg); }
+}
+
+.logo {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  border: 2px solid #ffd700;
+  overflow: hidden;
+  box-shadow:
+    0 0 20px rgba(255, 100, 0, 0.7),
+    0 0 50px rgba(255, 60, 0, 0.35),
+    inset 0 0 20px rgba(255, 60, 0, 0.15);
+  animation: logoFlicker 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes logoFlicker {
+  0%   { box-shadow: 0 0 18px rgba(255,100,0,0.7), 0 0 45px rgba(255,60,0,0.30); }
+  50%  { box-shadow: 0 0 30px rgba(255,140,0,0.9), 0 0 65px rgba(255,80,0,0.50); }
+  100% { box-shadow: 0 0 20px rgba(255,60,0,0.65), 0 0 40px rgba(200,30,0,0.25); }
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border: 2px solid var(--amarillo);
-  background: white;
 }
 
-.footer-logo span {
-  color: var(--amarillo);
-  font-weight: 900;
-  font-size: 1.2rem;
+/* ── Textos ── */
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(24px, 5vw, 32px);
+  color: #fff3b0;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow:
+    0 0 10px rgba(255,160,0,0.9),
+    0 0 25px rgba(255,80,0,0.5);
+  animation: titleFlicker 3s ease-in-out infinite alternate;
 }
 
-.footer-copy {
-  color: #aaa;
-  font-size: 0.85rem;
+@keyframes titleFlicker {
+  0%   { text-shadow: 0 0 10px rgba(255,160,0,0.9), 0 0 25px rgba(255,80,0,0.5); }
+  60%  { text-shadow: 0 0 18px rgba(255,200,0,1),   0 0 40px rgba(255,100,0,0.7); }
+  100% { text-shadow: 0 0 8px rgba(255,120,0,0.7),  0 0 20px rgba(200,40,0,0.4); }
 }
 
-.footer-sub {
-  margin-top: 6px;
-  font-size: 0.85rem;
+.subtitle {
+  font-size: 12px;
+  color: #ffd700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  opacity: 0.85;
+  text-shadow: 0 0 8px rgba(255, 160, 0, 0.6);
+}
+
+/* ── Divisor ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2rem;
+  width: clamp(180px, 50vw, 260px);
+}
+.divider-line {
+  flex: 1;
+  height: 0.5px;
+  background: linear-gradient(to right, transparent, #ff6a00, transparent);
+}
+.divider-diamond {
+  width: 6px; height: 6px;
+  background: #ffd700;
+  transform: rotate(45deg);
+  box-shadow: 0 0 6px rgba(255,200,0,0.9);
+}
+
+/* ── Botones ── */
+.buttons {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  background: rgba(180, 40, 0, 0.12);
+  border: 1px solid rgba(255, 120, 0, 0.35);
+  border-radius: 5px;
+  color: #f0e6c8;
+  text-decoration: none;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(16px, 3.5vw, 19px);
+  letter-spacing: 1px;
+  transition: background 0.25s, border-color 0.25s, color 0.25s, box-shadow 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,100,0,0.08), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
+}
+
+.btn:hover::before {
+  transform: translateX(100%);
+}
+
+.btn:hover {
+  background: rgba(200, 60, 0, 0.22);
+  border-color: rgba(255, 160, 0, 0.75);
+  color: #ffd700;
+  box-shadow:
+    0 0 12px rgba(255, 80, 0, 0.25),
+    inset 0 0 15px rgba(255, 60, 0, 0.08);
+}
+
+.btn-icon {
+  font-size: 20px;
+  margin-right: 4px;
+}
+
+.btn-arrow {
+  color: #ff8c00;
+  font-size: 20px;
+  opacity: 0.8;
+}
+
+.footer-ornament {
+  margin-top: 2rem;
+  color: #ff6a00;
+  opacity: 0.4;
+  font-size: 16px;
+  letter-spacing: 8px;
+}
+
+/* ── Partículas de brasa ── */
+.embers {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ember {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff5a0, #ff8c00, transparent);
+  animation: floatEmber linear infinite;
+  opacity: 0;
+}
+
+@keyframes floatEmber {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 0.6; }
+  100% { transform: translateY(-80vh) translateX(var(--drift)) scale(0.3); opacity: 0; }
 }
 </style>
 </head>
 <body>
 
-<!-- ══ BARRA SUPERIOR ══ -->
-<nav class="topbar">
-<div class="topbar-logo">
-  <img src="img/logo.jpg" alt="Logo">
-  <span>Guatazo de la Gata</span>
+<!-- Canvas llamas -->
+<canvas id="fireCanvas"></canvas>
+
+<!-- Resplandor ambiental -->
+<div class="ember-glow"></div>
+
+<!-- Brasas flotantes -->
+<div class="embers" id="embers"></div>
+
+<div class="page">
+  <div class="content">
+
+    <p class="ornament">✦ Restaurante ✦</p>
+
+    <div class="logo-wrap">
+      <div class="logo-ring"></div>
+      <div class="logo">
+        <img src="img/logo.jpg" alt="Logo" onerror="this.style.display='none'; this.parentElement.style.background='radial-gradient(circle at 40% 35%, #ff8c00, #cc2200)'">
+      </div>
+    </div>
+
+    <h1 class="title">La Delicia</h1>
+    <p class="subtitle">Comida &amp; Experiencia</p>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-diamond"></div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="buttons">
+      <a href="pagina.html" class="btn">
+        <span><span class="btn-icon">🌐</span> Ver Sitio Web</span>
+        <span class="btn-arrow">›</span>
+      </a>
+      <a href="menu.html" class="btn">
+        <span><span class="btn-icon">📋</span> Ver Menú Completo</span>
+        <span class="btn-arrow">›</span>
+      </a>
+      <a href="redes_sociales.html" class="btn">
+        <span><span class="btn-icon">📱</span> Redes Sociales</span>
+        <span class="btn-arrow">›</span>
+      </a>
+      <a href="ubicacion.html" class="btn">
+        <span><span class="btn-icon">📍</span> Ubicación del Local</span>
+        <span class="btn-arrow">›</span>
+      </a>
+      <a href="horario.html" class="btn">
+        <span><span class="btn-icon">🕐</span> Horario de Atención</span>
+        <span class="btn-arrow">›</span>
+      </a>
+    </div>
+
+    <p class="footer-ornament">— 🔥 —</p>
+  </div>
 </div>
-  <div class="topbar-links">
-    <a href="#menu">Menú</a>
-    <a href="#fotos">Fotos</a>
-    <a href="#horario">Horario</a>
-    <a href="#ubicacion">Ubicación</a>
-    <a href="https://wa.me/593XXXXXXXXX?text=Hola!%20quiero%20hacer%20un%20pedido" target="_blank" class="btn-whatsapp">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.117.549 4.103 1.51 5.83L.057 23.25a.75.75 0 0 0 .918.943l5.619-1.476A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.75c-1.95 0-3.78-.527-5.35-1.443l-.383-.229-3.975 1.042 1.062-3.872-.25-.396A9.712 9.712 0 0 1 2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75z"/></svg>
-      WhatsApp
-    </a>
-  </div>
-</nav>
 
-<!-- ══ HERO ══ -->
-<section class="hero" id="inicio">
-  <span class="sticker sticker-1">🐱</span>
-  <span class="sticker sticker-2">🍖</span>
-  <span class="sticker sticker-3">🔥</span>
-  <div class="hero-logo-wrap">
-    <div class="toplogo-logo">
-  <img src="img/logo.jpg" alt="Logo">
-</div>
-  </div>
-  <h1>El Guatazo<br>de la Gata</h1>
-  <p class="hero-sub">Sabores que te ronronean el alma</p>
-  <a href="#menu" class="hero-cta">Ver Menú 🍽️</a>
-</section>
+<script>
+/* ══════════════════════════════════════════
+   FIRE CANVAS — algoritmo clásico de fuego
+   pixel por pixel con blur + rise
+══════════════════════════════════════════ */
+const canvas = document.getElementById('fireCanvas');
+const ctx = canvas.getContext('2d');
 
-<!-- ══ MENÚ ══ -->
-<section id="menu">
-  <h2 class="section-title">Nuestro Menú</h2>
-  <div class="menu-grid">
+let W, H, cols, rows, buf, imgData;
 
-    <div class="menu-card">
-      <div class="menu-card-img">🍲</div>
-      <div class="menu-badge">⭐ Favorito</div>
-      <div class="menu-card-body">
-        <h3>Guatazo Supremo</h3>
-        <p>La bestia peluda del menú. Un sancocho espeso con tropezones enormes, maíz tierno, papa chola y el secreto de la gata: un sofrito que te hace cerrar los ojos.</p>
-        <span class="menu-price">$ 0.00</span>
-      </div>
-    </div>
+// Paleta de fuego: negro → rojo → naranja → amarillo → blanco
+function buildPalette() {
+  const pal = [];
+  for (let i = 0; i < 256; i++) {
+    let r, g, b;
+    if (i < 64) {
+      r = Math.round(i * 3);     g = 0;                    b = 0;
+    } else if (i < 128) {
+      r = 192 + Math.round((i-64)*1);  g = Math.round((i-64)*2.5); b = 0;
+    } else if (i < 192) {
+      r = 255; g = 160 + Math.round((i-128)*1.5); b = Math.round((i-128)*1.2);
+    } else {
+      r = 255; g = 255; b = Math.round((i-192)*3.5);
+    }
+    pal.push([Math.min(255,r), Math.min(255,g), Math.min(255,b)]);
+  }
+  return pal;
+}
+const palette = buildPalette();
 
-    <div class="menu-card">
-      <div class="menu-card-img">🍖</div>
-      <div class="menu-card-body">
-        <h3>Costillas a la Brasa Gatuna</h3>
-        <p>Costillas marinadas 24 horas en una mezcla de especias misteriosas, asadas a fuego lento hasta que la carne casi se cae sola. Acompañadas de yuca dorada y ají casero.</p>
-        <span class="menu-price">$ 0.00</span>
-      </div>
-    </div>
+function resize() {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  // Trabajamos a menor resolución para performance
+  cols = Math.ceil(W / 3);
+  rows = Math.ceil(H / 3);
+  canvas.width  = W;
+  canvas.height = H;
+  buf = new Uint8Array(cols * rows);
+  imgData = ctx.createImageData(W, H);
+}
 
-    <div class="menu-card">
-      <div class="menu-card-img">🥘</div>
-      <div class="menu-badge">🔥 Nuevo</div>
-      <div class="menu-card-body">
-        <h3>Seco de la Michi</h3>
-        <p>Seco de pollo a la antigua, con chicha de jora y naranjilla, servido sobre arroz aromático con aguacate en rodajas y ensalada de zanahoria y curtido de cebolla.</p>
-        <span class="menu-price">$ 0.00</span>
-      </div>
-    </div>
+function seedBottom() {
+  // Sembramos calor en la fila inferior con variación aleatoria
+  const y = rows - 1;
+  for (let x = 0; x < cols; x++) {
+    buf[y * cols + x] = Math.random() < 0.55
+      ? Math.floor(200 + Math.random() * 55)
+      : Math.floor(Math.random() * 120);
+  }
+  // También la penúltima fila
+  const y2 = rows - 2;
+  for (let x = 0; x < cols; x++) {
+    buf[y2 * cols + x] = Math.random() < 0.45
+      ? Math.floor(180 + Math.random() * 75)
+      : Math.floor(Math.random() * 80);
+  }
+}
 
-    <div class="menu-card">
-      <div class="menu-card-img">🍜</div>
-      <div class="menu-card-body">
-        <h3>Caldo de Siete Vidas</h3>
-        <p>Caldo tradicional de gallina criolla cocinado desde las 6am. Con fideos, huevo, perejil y ese aroma que te lleva de vuelta a la cocina de la abuela. Solo disponible en desayunos.</p>
-        <span class="menu-price">$ 0.00</span>
-      </div>
-    </div>
+function stepFire() {
+  seedBottom();
+  for (let y = 0; y < rows - 1; y++) {
+    for (let x = 0; x < cols; x++) {
+      const src =
+        buf[(y + 1) * cols + ((x - 1 + cols) % cols)] +
+        buf[(y + 1) * cols + x] +
+        buf[(y + 1) * cols + ((x + 1) % cols)] +
+        buf[Math.min(y + 2, rows - 1) * cols + x];
+      buf[y * cols + x] = Math.max(0, Math.floor(src / 4.05));
+    }
+  }
+}
 
-    <div class="menu-card">
-      <div class="menu-card-img">🌽</div>
-      <div class="menu-card-body">
-        <h3>Fritada de la Gata Brava</h3>
-        <p>Fritada de cerdo cocinada en su propia grasa, con tostado, maduro frito, mote y choclo. La receta que convirtió a la gata en leyenda del barrio. No se aconseja dieta antes de venir.</p>
-        <span class="menu-price">$ 0.00</span>
-      </div>
-    </div>
+function draw() {
+  // Escalamos de la grilla pequeña al canvas grande
+  const scaleX = W / cols;
+  const scaleY = H / rows;
+  const d = imgData.data;
 
-    <div class="menu-card">
-      <div class="menu-card-img">🥤</div>
-      <div class="menu-card-body">
-        <h3>Jugo Ronronero</h3>
-        <p>Batido especial de la casa: mora, babaco y maracuyá con un toque de panela y hierbabuena fresca. Servido en vaso gigante porque aquí no hacemos las cosas a medias.</p>
-        <span class="menu-price">$ 0.00</span>
-      </div>
-    </div>
+  // Llenamos cada píxel del canvas
+  for (let cy = 0; cy < rows; cy++) {
+    for (let cx = 0; cx < cols; cx++) {
+      const v = buf[cy * cols + cx];
+      const [r, g, b] = palette[v];
 
-  </div>
-</section>
+      const px0 = Math.floor(cx * scaleX);
+      const px1 = Math.floor((cx + 1) * scaleX);
+      const py0 = Math.floor(cy * scaleY);
+      const py1 = Math.floor((cy + 1) * scaleY);
 
-<!-- ══ FOTOS ══ -->
-<section id="fotos">
-  <h2 class="section-title">Galería</h2>
-  <div class="fotos-grid">
-    <div class="foto-item">🍲<div class="foto-overlay">Ver foto</div><div class="foto-caption">Guatazo Supremo</div></div>
-    <div class="foto-item">🔥<div class="foto-overlay">Ver foto</div><div class="foto-caption">A la brasa</div></div>
-    <div class="foto-item">🐱<div class="foto-overlay">Ver foto</div><div class="foto-caption">La Gata</div></div>
-    <div class="foto-item">🥘<div class="foto-overlay">Ver foto</div><div class="foto-caption">Seco de la Michi</div></div>
-    <div class="foto-item">🍖<div class="foto-overlay">Ver foto</div><div class="foto-caption">Costillas</div></div>
-  </div>
-</section>
+      for (let py = py0; py < py1; py++) {
+        for (let px = px0; px < px1; px++) {
+          const idx = (py * W + px) * 4;
+          d[idx]     = r;
+          d[idx + 1] = g;
+          d[idx + 2] = b;
+          d[idx + 3] = v < 5 ? 0 : Math.min(255, v * 2);
+        }
+      }
+    }
+  }
+  ctx.putImageData(imgData, 0, 0);
+}
 
-<!-- ══ HORARIO ══ -->
-<section id="horario">
-  <h2 class="section-title">Horario de Atención</h2>
-  <div class="horario-table">
-    <div class="horario-row cerrado"><span class="dia">Lunes</span><span class="hora cerrado">Cerrado</span></div>
-    <div class="horario-row"><span class="dia">Martes</span><span class="hora">8:00 a. m.–15:00 p. m.</span></div>
-    <div class="horario-row"><span class="dia">Miércoles</span><span class="hora">8:00 a. m.–16:00 p. m.</span></div>
-    <div class="horario-row"><span class="dia">Jueves</span><span class="hora">8:00 a. m.–16:00 p. m.</span></div>
-    <div class="horario-row"><span class="dia">Viernes</span><span class="hora">8:00 a. m.–16:00 p. m.</span></div>
-    <div class="horario-row"><span class="dia">Sábado</span><span class="hora">8:00 a. m.–16:00 p. m.</span></div>
-    <div class="horario-row"><span class="dia">Domingo</span><span class="hora">8:00 a. m.–16:00 p. m.</span></div>
-  </div>
-</section>
+function loop() {
+  stepFire();
+  draw();
+  requestAnimationFrame(loop);
+}
 
-<!-- ══ REDES SOCIALES ══ -->
-<section id="redes">
-  <h2 class="section-title">Síguenos</h2>
-  <div class="redes-btns">
-    <a href="https://www.facebook.com/profile.php?id=100069004608328&sk=directory_basic_info" target="_blank" class="btn-red btn-facebook">
-      <svg viewBox="0 0 24 24" fill="white"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-      Facebook
-    </a>
-    <a href="https://www.tiktok.com/@guatazooo2" target="_blank" class="btn-red btn-tiktok">
-      <svg viewBox="0 0 24 24" fill="white"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.75a8.26 8.26 0 0 0 4.83 1.55V6.85a4.85 4.85 0 0 1-1.06-.16z"/></svg>
-      TikTok
-    </a>
-  </div>
-</section>
+window.addEventListener('resize', resize);
+resize();
+loop();
 
-<!-- ══ UBICACIÓN ══ -->
-<section id="ubicacion">
-  <h2 class="section-title">¿Dónde Estamos?</h2>
-  <div class="ubicacion-inner">
-    <div class="ubicacion-info">
-      <h3>📍 Encuéntranos</h3>
-      <p><strong>Dirección:</strong><br>Barrio los Ceibos, Nueva Loja</p>
-      <p><strong>Teléfono:</strong><br>+593 XX XXX XXXX</p>
-      <p><strong>Correo:</strong><br>guatazo@lagata.com</p>
-      <p style="margin-top:1rem;"><strong>Referencia:</strong><br>Cerca a la cancha<br>de los ceibos.</p>
-    </div>
-    <div class="map-frame">
-      <!-- Reemplaza las coordenadas con las tuyas -->
-      <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1128.5486466093575!2d-76.9000951989325!3d0.08562795544925512!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e2823398ecdeebd%3A0x18487f2a3ac7c556!2sEl%20Guatazo%20De%20La%20Gata!5e1!3m2!1ses!2sec!4v1776980770932!5m2!1ses!2sec" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-    </div>
-  </div>
-</section>
+/* ══════════════════════════════════════════
+   PARTÍCULAS DE BRASA flotantes
+══════════════════════════════════════════ */
+const emberContainer = document.getElementById('embers');
 
-<section id="info-local">
-  <h2 class="section-title">Información del Local</h2>
+function spawnEmber() {
+  const el = document.createElement('div');
+  el.className = 'ember';
+  const size = 2 + Math.random() * 4;
+  const left = 10 + Math.random() * 80;
+  const duration = 3 + Math.random() * 5;
+  const drift = (Math.random() - 0.5) * 120;
+  el.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${left}%;
+    bottom: ${Math.random() * 20}%;
+    --drift: ${drift}px;
+    animation-duration: ${duration}s;
+    animation-delay: ${Math.random() * 4}s;
+  `;
+  emberContainer.appendChild(el);
+  setTimeout(() => el.remove(), (duration + 4) * 1000);
+}
 
-  <div class="info-grid">
-
-    <div class="info-block">
-      <h3>Opciones de servicio</h3>
-      <ul>
-        <li>Asientos al aire libre</li>
-        <li>Entrega a domicilio</li>
-        <li>Para llevar</li>
-        <li>Consumo en el lugar</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Popular por</h3>
-      <ul>
-        <li>Almuerzo</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Accesibilidad</h3>
-      <ul>
-        <li>Espacio accesible para personas en silla de ruedas</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Qué ofrece</h3>
-      <ul>
-        <li>Alcohol</li>
-        <li>Aperitivos</li>
-        <li>Cerveza</li>
-        <li>Vino</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Opciones del local</h3>
-      <ul>
-        <li>Almuerzo</li>
-        <li>Espacio con asientos</li>
-        <li>Servicio a la mesa</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Servicios</h3>
-      <ul>
-        <li>Sanitario</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Ambiente</h3>
-      <ul>
-        <li>A la moda</li>
-        <li>Agradable</li>
-        <li>Informal</li>
-        <li>Relajado</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Público usual</h3>
-      <ul>
-        <li>Grupos</li>
-        <li>Turistas</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Pagos</h3>
-      <ul>
-        <li>Solo dinero en efectivo</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Menores</h3>
-      <ul>
-        <li>Ideal para ir con niños</li>
-      </ul>
-    </div>
-
-    <div class="info-block">
-      <h3>Estacionamiento</h3>
-      <ul>
-        <li>Estacionamiento</li>
-        <li>Estacionamiento gratuito</li>
-        <li>Estacionamiento gratuito en la calle</li>
-      </ul>
-    </div>
-
-  </div>
-</section>
-
-<!-- ══ FOOTER ══ -->
-<footer>
-  <div class="footer-logo">
-    <img src="img/logo.jpg" alt="Logo">
-    <span>El Guatazo de la Gata</span>
-  </div>
-
-  <p class="footer-copy">Todos los derechos reservados © 2025</p>
-  <p class="footer-sub">Hecho con amor y mucha fritada 🍖🔥</p>
-</footer>
-
+// Lanzar brasas periódicamente
+setInterval(spawnEmber, 300);
+// Lanzar unas iniciales de golpe
+for (let i = 0; i < 15; i++) spawnEmber();
+</script>
 </body>
 </html>

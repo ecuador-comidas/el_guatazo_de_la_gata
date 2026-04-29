@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú — La Delicia</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Cormorant+Garamond:wght@300;400;600&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow-x: hidden; }
+
+body {
+  font-family: 'Cormorant Garamond', serif;
+  background: #080300;
+  min-height: 100vh;
+}
+
+.bg {
+  position: fixed; inset: 0; z-index: 0;
+  background: radial-gradient(ellipse at 50% 110%,
+    rgba(160,40,0,0.35) 0%, rgba(80,15,0,0.18) 45%, #080300 75%
+  );
+  animation: breathe 6s ease-in-out infinite alternate;
+}
+@keyframes breathe { from { opacity: 0.75; } to { opacity: 1; } }
+
+.embers { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+.ember {
+  position: absolute; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,220,100,0.9), rgba(255,100,0,0.4), transparent);
+  animation: floatEmber linear infinite; opacity: 0;
+}
+@keyframes floatEmber {
+  0%   { transform: translateY(0) translateX(0); opacity: 0; }
+  15%  { opacity: 0.7; }
+  85%  { opacity: 0.3; }
+  100% { transform: translateY(-70vh) translateX(var(--drift)); opacity: 0; }
+}
+
+.page {
+  position: relative; z-index: 10;
+  min-height: 100vh;
+  padding: 2.5rem 1.2rem 5rem;
+}
+
+/* ── Header ── */
+.header { text-align: center; margin-bottom: 2rem; }
+
+.header-ornament {
+  color: #ffd700; font-size: 11px; letter-spacing: 7px;
+  text-transform: uppercase; opacity: 0.75;
+  display: block; margin-bottom: 0.4rem;
+}
+
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 5vw, 40px);
+  color: #fff3b0; letter-spacing: 4px; text-transform: uppercase;
+  text-shadow: 0 0 20px rgba(255,120,0,0.4);
+}
+
+.header-divider {
+  display: flex; align-items: center; gap: 10px;
+  margin: 0.9rem auto 0; width: clamp(140px, 35vw, 240px);
+}
+.h-line { flex: 1; height: 0.5px; background: linear-gradient(to right, transparent, #ff6a00, transparent); }
+.h-diamond { width: 5px; height: 5px; background: #ffd700; transform: rotate(45deg); }
+
+/* ── Tabs de categorías ── */
+.tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 2rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 20px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,100,0,0.22);
+  border-radius: 30px;
+  color: rgba(240,220,180,0.65);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(14px, 2.5vw, 16px);
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.tab:hover {
+  background: rgba(255,80,0,0.1);
+  border-color: rgba(255,150,0,0.45);
+  color: #f0e6c8;
+}
+
+.tab.active {
+  background: rgba(200,60,0,0.25);
+  border-color: #ff8c00;
+  color: #ffd700;
+  box-shadow: 0 0 14px rgba(255,80,0,0.2), inset 0 0 10px rgba(255,60,0,0.07);
+}
+
+.tab-icon { font-size: 16px; }
+
+/* ── Grid ── */
+.menu-grid {
+  display: grid;
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto;
+  grid-template-columns: repeat(2, 1fr);
+}
+@media (min-width: 640px) {
+  .menu-grid { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+}
+@media (min-width: 960px) {
+  .menu-grid { grid-template-columns: repeat(4, 1fr); gap: 22px; }
+}
+
+/* ── Tarjeta ── */
+.card {
+  background: rgba(15,5,0,0.8);
+  border: 1px solid rgba(255,100,0,0.18);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s, opacity 0.35s, scale 0.35s;
+  backdrop-filter: blur(3px);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255,150,0,0.5);
+  box-shadow: 0 0 16px rgba(255,70,0,0.18), 0 8px 24px rgba(0,0,0,0.4);
+}
+
+/* Animación entrada/salida */
+.card.hidden {
+  opacity: 0;
+  scale: 0.93;
+  pointer-events: none;
+  position: absolute; /* saca del flujo */
+  visibility: hidden;
+}
+.card.visible {
+  opacity: 1;
+  scale: 1;
+}
+
+/* ── Imagen ── */
+.card-img-wrap {
+  position: relative; overflow: hidden;
+  height: clamp(95px, 26vw, 185px);
+  cursor: pointer;
+  background: linear-gradient(135deg, #3a0a00, #1a0400);
+}
+.card-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: transform 0.4s ease;
+}
+.card-img-wrap:hover img { transform: scale(1.06); }
+.card-img-wrap::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0;
+  height: 45%;
+  background: linear-gradient(to top, rgba(8,3,0,0.85), transparent);
+  pointer-events: none;
+}
+.zoom-icon {
+  position: absolute; top: 6px; right: 6px;
+  width: 24px; height: 24px;
+  background: rgba(0,0,0,0.5); border: 1px solid rgba(255,150,0,0.4);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; opacity: 0; transition: opacity 0.2s;
+  pointer-events: none; z-index: 2;
+}
+.card-img-wrap:hover .zoom-icon { opacity: 1; }
+
+/* ── Cuerpo ── */
+.card-body { padding: clamp(8px, 2vw, 13px); }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(13px, 2.4vw, 18px);
+  color: #fff3b0; margin-bottom: 4px; line-height: 1.2;
+}
+.card-desc {
+  font-size: clamp(11px, 1.6vw, 13px);
+  color: rgba(230,205,170,0.6);
+  line-height: 1.4; margin-bottom: 8px; font-weight: 300;
+}
+@media (max-width: 380px) { .card-desc { display: none; } }
+
+.card-footer {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 4px;
+}
+.card-price {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(14px, 2.6vw, 20px);
+  color: #ff8c00; font-weight: 700;
+}
+.card-badge {
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: #ffd700; border: 0.5px solid rgba(255,200,0,0.35);
+  padding: 2px 6px; border-radius: 20px;
+  background: rgba(255,140,0,0.07); white-space: nowrap;
+}
+
+/* Mensaje vacío */
+.empty-msg {
+  display: none;
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem 1rem;
+  color: rgba(255,200,100,0.4);
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+/* ── Back ── */
+.back-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: rgba(255,190,100,0.65); text-decoration: none;
+  font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 1.8rem; transition: color 0.2s;
+}
+.back-btn:hover { color: #ffd700; }
+
+/* ── MODAL ── */
+.modal {
+  display: none; position: fixed; z-index: 999; inset: 0;
+  background: rgba(0,0,0,0.9);
+  justify-content: center; align-items: center; cursor: zoom-out;
+}
+.modal.active { display: flex; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-inner { position: relative; max-width: 88vw; max-height: 88vh; }
+.modal-inner img {
+  max-width: 100%; max-height: 88vh; border-radius: 10px;
+  border: 1px solid rgba(255,130,0,0.35);
+  box-shadow: 0 0 30px rgba(255,60,0,0.2); display: block;
+}
+.modal-close {
+  position: absolute; top: -13px; right: -13px;
+  width: 28px; height: 28px; background: #b33000;
+  border: none; border-radius: 50%; color: #fff;
+  font-size: 14px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="embers" id="embers"></div>
+
+<div class="page">
+  <a href="index.html" class="back-btn">← Volver al inicio</a>
+
+  <div class="header">
+    <span class="header-ornament">✦ La Delicia ✦</span>
+    <h1>Nuestro Menú</h1>
+    <div class="header-divider">
+      <div class="h-line"></div><div class="h-diamond"></div><div class="h-line"></div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="filterMenu('platos')">
+      <span class="tab-icon">🍽️</span> Platos Fuertes
+    </button>
+    <button class="tab" onclick="filterMenu('desayunos')">
+      <span class="tab-icon">🍳</span> Desayunos
+    </button>
+    <button class="tab" onclick="filterMenu('almuerzos')">
+      <span class="tab-icon">🥗</span> Almuerzos
+    </button>
+    <button class="tab" onclick="filterMenu('bebidas')">
+      <span class="tab-icon">🥤</span> Bebidas
+    </button>
+  </div>
+
+  <!-- GRID -->
+  <div class="menu-grid" id="menuGrid">
+
+    <!-- PLATOS FUERTES -->
+    <div class="card visible" data-cat="platos">
+      <div class="card-img-wrap" onclick="openModal('img/plato.jpg')">
+        <img src="img/plato.jpg" alt="Hamburguesa Clásica" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Hamburguesa Clásica</div>
+        <div class="card-desc">Carne jugosa, queso, lechuga y tomate fresco.</div>
+        <div class="card-footer">
+          <span class="card-price">$5.99</span>
+          <span class="card-badge">Popular</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card visible" data-cat="platos">
+      <div class="card-img-wrap" onclick="openModal('img/plato2.jpg')">
+        <img src="img/plato2.jpg" alt="Hamburguesa BBQ" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Hamburguesa BBQ</div>
+        <div class="card-desc">Salsa BBQ ahumada, cebolla caramelizada y tocino.</div>
+        <div class="card-footer">
+          <span class="card-price">$6.99</span>
+          <span class="card-badge">Especial</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card visible" data-cat="platos">
+      <div class="card-img-wrap" onclick="openModal('img/plato.jpg')">
+        <img src="img/plato.jpg" alt="Hamburguesa Doble" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Hamburguesa Doble</div>
+        <div class="card-desc">Doble carne, doble queso y salsa especial de la casa.</div>
+        <div class="card-footer">
+          <span class="card-price">$8.49</span>
+          <span class="card-badge">Chef's Pick</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card visible" data-cat="platos">
+      <div class="card-img-wrap" onclick="openModal('img/plato2.jpg')">
+        <img src="img/plato2.jpg" alt="Costillas BBQ" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Costillas BBQ</div>
+        <div class="card-desc">Costillas a la parrilla con salsa de la casa y papas.</div>
+        <div class="card-footer">
+          <span class="card-price">$12.99</span>
+          <span class="card-badge">Estrella</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- DESAYUNOS -->
+    <div class="card hidden" data-cat="desayunos">
+      <div class="card-img-wrap" onclick="openModal('img/desayuno.jpg')">
+        <img src="img/desayuno.jpg" alt="Desayuno Americano" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Desayuno Americano</div>
+        <div class="card-desc">Huevos revueltos, tocino, pan tostado y jugo.</div>
+        <div class="card-footer">
+          <span class="card-price">$4.99</span>
+          <span class="card-badge">Clásico</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="desayunos">
+      <div class="card-img-wrap" onclick="openModal('img/desayuno2.jpg')">
+        <img src="img/desayuno2.jpg" alt="Pancakes" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Pancakes</div>
+        <div class="card-desc">Torre de pancakes con miel, frutos rojos y crema.</div>
+        <div class="card-footer">
+          <span class="card-price">$5.49</span>
+          <span class="card-badge">Popular</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="desayunos">
+      <div class="card-img-wrap" onclick="openModal('img/desayuno.jpg')">
+        <img src="img/desayuno.jpg" alt="Tostadas con Aguacate" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Tostadas con Aguacate</div>
+        <div class="card-desc">Pan artesanal, aguacate, huevo pochado y semillas.</div>
+        <div class="card-footer">
+          <span class="card-price">$4.49</span>
+          <span class="card-badge">Saludable</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="desayunos">
+      <div class="card-img-wrap" onclick="openModal('img/desayuno2.jpg')">
+        <img src="img/desayuno2.jpg" alt="Omelette Especial" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Omelette Especial</div>
+        <div class="card-desc">Omelette relleno de champiñones, queso y jamón.</div>
+        <div class="card-footer">
+          <span class="card-price">$5.99</span>
+          <span class="card-badge">Chef's Pick</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ALMUERZOS -->
+    <div class="card hidden" data-cat="almuerzos">
+      <div class="card-img-wrap" onclick="openModal('img/almuerzo.jpg')">
+        <img src="img/almuerzo.jpg" alt="Sopa del Día" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Sopa del Día</div>
+        <div class="card-desc">Sopa casera con ingredientes frescos de temporada.</div>
+        <div class="card-footer">
+          <span class="card-price">$3.49</span>
+          <span class="card-badge">Casero</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="almuerzos">
+      <div class="card-img-wrap" onclick="openModal('img/almuerzo2.jpg')">
+        <img src="img/almuerzo2.jpg" alt="Menú Ejecutivo" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Menú Ejecutivo</div>
+        <div class="card-desc">Sopa, plato fuerte, jugo y postre del día.</div>
+        <div class="card-footer">
+          <span class="card-price">$7.99</span>
+          <span class="card-badge">Completo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="almuerzos">
+      <div class="card-img-wrap" onclick="openModal('img/almuerzo.jpg')">
+        <img src="img/almuerzo.jpg" alt="Arroz con Pollo" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Arroz con Pollo</div>
+        <div class="card-desc">Arroz especiado, pollo a la plancha y ensalada fresca.</div>
+        <div class="card-footer">
+          <span class="card-price">$6.49</span>
+          <span class="card-badge">Popular</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="almuerzos">
+      <div class="card-img-wrap" onclick="openModal('img/almuerzo2.jpg')">
+        <img src="img/almuerzo2.jpg" alt="Seco de Res" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Seco de Res</div>
+        <div class="card-desc">Carne estofada, menestra, arroz y maduro frito.</div>
+        <div class="card-footer">
+          <span class="card-price">$6.99</span>
+          <span class="card-badge">Estrella</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEBIDAS -->
+    <div class="card hidden" data-cat="bebidas">
+      <div class="card-img-wrap" onclick="openModal('img/bebida.jpg')">
+        <img src="img/bebida.jpg" alt="Limonada Natural" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Limonada Natural</div>
+        <div class="card-desc">Limonada fresca exprimida al momento con menta.</div>
+        <div class="card-footer">
+          <span class="card-price">$1.99</span>
+          <span class="card-badge">Fresco</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="bebidas">
+      <div class="card-img-wrap" onclick="openModal('img/bebida2.jpeg')">
+        <img src="img/bebida2.jpeg" alt="Jugo de Naranja" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Jugo de Naranja</div>
+        <div class="card-desc">Jugo natural de naranja recién exprimido.</div>
+        <div class="card-footer">
+          <span class="card-price">$1.79</span>
+          <span class="card-badge">Natural</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="bebidas">
+      <div class="card-img-wrap" onclick="openModal('img/bebida.jpg')">
+        <img src="img/bebida.jpg" alt="Batido de Fresa" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Batido de Fresa</div>
+        <div class="card-desc">Batido cremoso de fresa con leche y un toque de vainilla.</div>
+        <div class="card-footer">
+          <span class="card-price">$2.99</span>
+          <span class="card-badge">Popular</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card hidden" data-cat="bebidas">
+      <div class="card-img-wrap" onclick="openModal('img/bebida2.jpeg')">
+        <img src="img/bebida2.jpeg" alt="Café Especial" onerror="this.style.opacity=0">
+        <div class="zoom-icon">🔍</div>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Café Especial</div>
+        <div class="card-desc">Café de origen con leche espumada y canela.</div>
+        <div class="card-footer">
+          <span class="card-price">$2.49</span>
+          <span class="card-badge">Artesanal</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensaje cuando no hay items -->
+    <div class="empty-msg" id="emptyMsg">✦ Próximamente ✦</div>
+
+  </div><!-- /menu-grid -->
+</div><!-- /page -->
+
+<!-- MODAL -->
+<div class="modal" id="modal" onclick="closeModal()">
+  <div class="modal-inner" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <img id="modal-img" src="" alt="Vista ampliada">
+  </div>
+</div>
+
+<script>
+/* ── FILTRO DE CATEGORÍAS ── */
+let currentCat = 'platos';
+
+function filterMenu(cat) {
+  currentCat = cat;
+
+  // Actualizar tabs
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+
+  // Mostrar/ocultar cards con animación
+  const cards = document.querySelectorAll('.card');
+  let visible = 0;
+
+  cards.forEach(card => {
+    if (card.dataset.cat === cat) {
+      // Quitar hidden, agregar visible
+      card.classList.remove('hidden');
+      card.style.position = '';
+      card.style.visibility = '';
+      // Pequeño delay para que el CSS transition funcione
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          card.classList.add('visible');
+        });
+      });
+      visible++;
+    } else {
+      card.classList.remove('visible');
+      card.classList.add('hidden');
+      // Esperar a que termine la transición para sacar del flujo
+      setTimeout(() => {
+        if (card.classList.contains('hidden')) {
+          card.style.position = 'absolute';
+          card.style.visibility = 'hidden';
+        }
+      }, 380);
+    }
+  });
+
+  // Mensaje vacío
+  document.getElementById('emptyMsg').style.display = visible === 0 ? 'block' : 'none';
+}
+
+// Inicializar: ocultar todo lo que no sea 'platos'
+document.querySelectorAll('.card').forEach(card => {
+  if (card.dataset.cat !== 'platos') {
+    card.style.position = 'absolute';
+    card.style.visibility = 'hidden';
+  }
+});
+
+/* ── BRASAS ── */
+const ec = document.getElementById('embers');
+function spawnEmber() {
+  const el = document.createElement('div');
+  el.className = 'ember';
+  const size = 1.5 + Math.random() * 2.5;
+  const dur  = 7 + Math.random() * 8;
+  const drift = (Math.random() - 0.5) * 70;
+  el.style.cssText = `width:${size}px;height:${size}px;left:${10+Math.random()*80}%;bottom:${Math.random()*8}%;--drift:${drift}px;animation-duration:${dur}s;animation-delay:${Math.random()*6}s;`;
+  ec.appendChild(el);
+  setTimeout(() => el.remove(), (dur + 6) * 1000);
+}
+setInterval(spawnEmber, 1100);
+for (let i = 0; i < 7; i++) spawnEmber();
+
+/* ── MODAL ── */
+function openModal(src) {
+  document.getElementById('modal-img').src = src;
+  document.getElementById('modal').classList.add('active');
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
